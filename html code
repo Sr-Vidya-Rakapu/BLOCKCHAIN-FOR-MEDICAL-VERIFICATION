@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Medical Records</title>
+</head>
+<body>
+    <h1>Blockchain Medical Records</h1>
+    <div>
+        <h2>Add Medical Record</h2>
+        <input type="text" id="description" placeholder="Description">
+        <input type="text" id="dataHash" placeholder="Data Hash">
+        <button onclick="addRecord()">Add Record</button>
+    </div>
+    <div>
+        <h2>Grant Access to Doctor</h2>
+        <input type="text" id="doctorAddress" placeholder="Doctor's Address">
+        <button onclick="grantAccess()">Grant Access</button>
+    </div>
+    <div>
+        <h2>Your Medical Records</h2>
+        <button onclick="getRecords()">Get Records</button>
+        <ul id="recordsList"></ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script>
+        const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+
+        const contractAddress = "YOUR_CONTRACT_ADDRESS_HERE";
+        const abi = [
+            // The ABI from the compiled smart contract
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "dataHash",
+                        "type": "string"
+                    }
+                ],
+                "name": "addRecord",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "doctor",
+                        "type": "address"
+                    }
+                ],
+                "name": "grantAccess",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "patient",
+                        "type": "address"
+                    }
+                ],
+                "name": "getRecords",
+                "outputs": [
+                    {
+                        "components": [
+                            {
+                                "internalType": "string",
+                                "name": "description",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "dataHash",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "patient",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "bool",
+                                "name": "isSet",
+                                "type": "bool"
+                            }
+                        ],
+                        "internalType": "struct MedicalRecords.Record[]",
+                        "name": "",
+                        "type": "tuple[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        const contract = new web3.eth.Contract(abi, contractAddress);
+
+        async function addRecord() {
+            const accounts = await web3.eth.requestAccounts();
+            const description = document.getElementById('description').value;
+            const dataHash = document.getElementById('dataHash').value;
+            await contract.methods.addRecord(description, dataHash).send({ from: accounts[0] });
+        }
+
+        async function grantAccess() {
+            const accounts = await web3.eth.requestAccounts();
+            const doctorAddress = document.getElementById('doctorAddress').value;
+            await contract.methods.grantAccess(doctorAddress).send({ from: accounts[0] });
+        }
+
+        async function getRecords() {
+            const accounts = await web3.eth.requestAccounts();
+            const records = await contract.methods.getRecords(accounts[0]).call({ from: accounts[0] });
+            const recordsList = document.getElementById('recordsList');
+            recordsList.innerHTML = '';
+            records.forEach(record => {
+                const li = document.createElement('li');
+                li.textContent = `Description: ${record.description}, Data Hash: ${record.dataHash}`;
+                recordsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
