@@ -32,7 +32,7 @@ Clone the Repository
 
 bash
 
-git clone https://github.com/yourusername/blockchain-medical-verification.git
+git clone https://github.com/Sr-Vidya-Rakapu/blockchain-medical-verification.git
 cd blockchain-medical-verification
 
 Install Dependencies
