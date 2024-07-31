@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MedicalRecords {
+    struct Record {
+        string description;
+        string dataHash;
+        address patient;
+        bool isSet;
+    }
+
+    mapping(address => Record[]) private records;
+    mapping(address => mapping(address => bool)) private access;
+
+    event RecordAdded(address patient, string dataHash);
+    event AccessGranted(address patient, address doctor);
+    event AccessRevoked(address patient, address doctor);
+
+    function addRecord(string memory description, string memory dataHash) public {
+        records[msg.sender].push(Record(description, dataHash, msg.sender, true));
+        emit RecordAdded(msg.sender, dataHash);
+    }
+
+    function grantAccess(address doctor) public {
+        access[msg.sender][doctor] = true;
+        emit AccessGranted(msg.sender, doctor);
+    }
+
+    function revokeAccess(address doctor) public {
+        access[msg.sender][doctor] = false;
+        emit AccessRevoked(msg.sender, doctor);
+    }
+
+    function getRecords(address patient) public view returns (Record[] memory) {
+        require(access[patient][msg.sender] || msg.sender == patient, "Access denied");
+        return records[patient];
+    }
+}
