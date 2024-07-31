@@ -1,6 +1,6 @@
 # BLOCKCHAIN-FOR-MEDICAL-VERIFICATION
 
-#Project Overview
+Project Overview
 
 This project aims to revolutionize the way medical records are stored and accessed by leveraging blockchain technology. By storing medical records on a blockchain, patients have full control over their data, ensuring both security and accessibility. Patients can set passwords to protect their records and grant access to doctors when necessary. This system saves testing time and allows doctors to make informed decisions quickly based on the patient's medical history.
 Features
@@ -10,7 +10,7 @@ Features
     Easy Access: Patients can grant access to their records to any doctor, facilitating quicker diagnosis and treatment.
     Efficiency: By accessing a patient’s medical history, doctors can avoid redundant tests and provide timely and accurate medical care.
 
-#Technology Stack
+Technology Stack
 
     Blockchain Platform: Ethereum / Hyperledger / Other
     Smart Contracts: Solidity / Chaincode / Other
@@ -19,7 +19,7 @@ Features
     Database: IPFS / Other distributed storage solutions
     Authentication: OAuth / JWT / Other
 
-#Prerequisites
+Prerequisites
 
     Node.js
     NPM or Yarn
